@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="LoadingImagesView">
+        <attr name="imagesArray" format="reference" />
+        <attr name="animDuration" format="integer" />
+        <attr name="dividerColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="ParallaxView">
+        <attr name="isEnabledHorizontalParallax" format="boolean"/>
+        <attr name="isEnabledVerticalParallax" format="boolean"/>
+        <attr name="isInvertedHorizontalParallax" format="boolean"/>
+        <attr name="isInvertedVerticalParallax" format="boolean"/>
+        <attr name="isNeedScale" format="boolean"/>
+        <attr name="decelerateFactor" format="float"/>
+        <attr name="parallaxScale" format="float"/>
+    </declare-styleable>
+
     <declare-styleable name="SlidingUpPanelLayout">
         <attr name="umanoPanelHeight" format="dimension" />
         <attr name="umanoShadowHeight" format="dimension" />
@@ -29,6 +46,26 @@
         <attr name="shimmer_mask_width" format="float|reference"/>
         <attr name="shimmer_gradient_center_color_width" format="float|reference"/>
         <attr name="shimmer_reverse_animation" format="boolean|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="AnimatedCountTextView">
+        <attr name="startWith" format="string"/>
+        <attr name="endWith" format="string"/>
+        <attr name="duration" format="integer"/>
+        <attr name="prefix" format="string"/>
+        <attr name="suffix" format="string"/>
+
+        <attr name="numberType">
+            <enum name="integer" value="1" />
+            <enum name="decimal" value="2" />
+        </attr>
+
+    </declare-styleable>
+
+    <declare-styleable name="SelectableTextView">
+        <attr name="textJustify" format="boolean"/>
+        <attr name="forbiddenActionMenu" format="boolean"/>
+        <attr name="textHeightColor" format="color"/>
     </declare-styleable>
 
 </resources>

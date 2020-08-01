@@ -1,33 +1,35 @@
 package home.smart.fly.animations;
 
-import android.graphics.Color;
-import androidx.multidex.MultiDexApplication;
+import android.app.Application;
+import android.os.Debug;
 import android.util.Log;
 import android.webkit.WebView;
 
+import androidx.multidex.MultiDex;
+
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.didichuxing.doraemonkit.DoraemonKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.tencent.mmkv.MMKV;
 
-import jp.wasabeef.takt.Seat;
-import jp.wasabeef.takt.Takt;
+import home.smart.fly.animations.internal.annotations.Path;
+import hugo.weaving.DebugLog;
 
 /**
  * Created by rookie on 2017-03-08.
  */
 
-public class MyApplication extends MultiDexApplication {
+public class MyApplication extends Application {
     @Override
+    @DebugLog
     public void onCreate() {
         super.onCreate();
-        Stetho.initializeWithDefaults(this);
 
-        if (!LeakCanary.isInAnalyzerProcess(this)) {
-//            installLeakCanary();
-        }
+        Debug.startMethodTracing("sample");
+
+        MultiDex.install(this);
+        Stetho.initializeWithDefaults(this);
 
         if (BuildConfig.DEBUG) {
             ARouter.openLog();
@@ -36,24 +38,20 @@ public class MyApplication extends MultiDexApplication {
 
         ARouter.init(this);
         Fresco.initialize(this);
-
+        String dir = MMKV.initialize(this);
+        Log.e("application", "onCreate: mmkv.dir==" + dir);
         WebView.setWebContentsDebuggingEnabled(true);
 
-        Takt.stock(this)
-                .seat(Seat.TOP_RIGHT)
-                .interval(250)
-                .color(Color.RED)
-                .size(14f)
-                .alpha(.5f)
-                .listener(fps -> Log.d("Excellent!", fps + " fps"));
 
-        String dir = MMKV.initialize(this);
-        Log.e("application", "onCreate: mmkv.dir=="+dir );
+        DoraemonKit.disableUpload();
+        DoraemonKit.install(this);
+//        DoraemonKit.hide();
+        logLifeCycleCallBacks();
+
+        Debug.stopMethodTracing();
     }
 
-
-    protected RefWatcher installLeakCanary() {
-        // ignore some thing
-        return RefWatcher.DISABLED;
+    @Path(value = "", level = 1100)
+    protected void logLifeCycleCallBacks() {
     }
 }

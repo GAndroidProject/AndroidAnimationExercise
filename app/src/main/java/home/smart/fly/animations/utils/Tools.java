@@ -12,20 +12,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import home.smart.fly.animations.internal.annotations.Tiger;
+
 /**
  * Created by rookie on 2017/2/10.
  */
 
+@Tiger
 public class Tools {
     private static final String TAG = "Tools";
 
@@ -41,12 +40,19 @@ public class Tools {
     }
 
 
+    public static String getCurrentTime(long tempStap) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年", Locale.CHINA);
+        Date curDate = new Date(tempStap);
+        return simpleDateFormat.format(curDate);
+    }
+
+
     /**
      * 获取版本号
      *
      * @return 当前应用的版本号
      */
-    public static String getVersion(Context mContext) {
+    public static String getAppVersion(Context mContext) {
         int version = -1;
         String versionStr = "";
         try {
@@ -85,7 +91,6 @@ public class Tools {
      *
      * @param filename
      * @param filecontent
-     * @throws Exception
      */
     public static void saveToSDCard(String filename, String filecontent) {
         File file = new File(Environment.getExternalStorageDirectory(),
@@ -102,7 +107,6 @@ public class Tools {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
         }
-
     }
 
     public static String readStrFromAssets(String filename, Context mContext) {
@@ -123,6 +127,26 @@ public class Tools {
         }
         return result;
     }
+
+
+    public static boolean copyFileFromAssetsToBox(String filename, Context mContext) {
+        boolean result = false;
+        String out = mContext.getFilesDir() + File.separator + filename;
+        InputStream inputStream;
+        OutputStream outputStream;
+        try {
+            inputStream = mContext.getAssets().open(filename);
+            outputStream = new FileOutputStream(new File(out));
+            StreamUtil.copy(inputStream, outputStream, new byte[1024]);
+            inputStream.close();
+            outputStream.close();
+            result = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
     public static int getScreenWidth(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

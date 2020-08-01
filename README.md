@@ -10,12 +10,20 @@
 随着时间的推移，里面积累的很多代码，大致用5个Fragment 做了分类：
 
 
-[Apk 下载体验](https://fir.im/tm15)
+[Apk 下载体验](http://d.7short.com/tm15)
 
 
 扫一扫体验
 
+<details>
+<summary>打开</summary>
+
 ![扫一扫体验](https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/download.png)
+
+</details>
+
+
+
 
 
 ## ImitateFragment （模仿三方应用特效）
@@ -69,6 +77,16 @@ imitate 内的内容全部由 kotlin 语言实现，后续所有内容都会往�
 
 在组件化的过程中，使用 [ARouter](https://github.com/alibaba/ARouter) 非常方便。完全解决了页面跳转的问题。
 
+### Android 构建流程 Gradle 的学习和 Gradle 插件自定义
+
+在 buildSrc 内包含一些关于 gradle 构建流程的自定义内容，包括
+
+- 实现生成 apk 根据 flavor 改名。
+- 对构建流程中执行的 task 按执行时长打印，发现编译耗时的 task
+- 在构建流程中对特定注解的方法或类进行耗时检测。
+- 对代码中点击事件的插桩埋点
+- 通过配置对三方库中的代码进行特定的插桩，实现特定的功能。
+
 
 以下是部分内容截屏动画
 
@@ -76,23 +94,43 @@ imitate 内的内容全部由 kotlin 语言实现，后续所有内容都会往�
 
 <img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/football.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/football2.gif"/>
 
+## galaxy 效果 && gif 反转
+
+<img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/galaxy.gif"/><img width=287 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/revert_gif.gif"/>
+
+
+
+## skeleton  && bitmap mesh 效果
+
+<img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/skeleton.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/mesh.gif"/>
+
+## parallax 效果 && 2048 游戏(pure web)
+
+<img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/parallax.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/2048_game.gif"/>
+
 
 ## 仿懂球帝球员数据网状图 && 仿简书生成长图文章效果
 
 <img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/polyganoView.png"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/jianshu.gif"/>
 
-## 仿探探效果 & 约束布局（ConstraintLayout AnimationSet） 动画
 
-<img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/slide.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/constraint_set_anim.gif"/>
 
-## 仿知乎广告效果动画
+## 仿知乎广告效果动画 && pure 3D animation view
 
-<img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/ad.gif"/>
+<img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/ad.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/ad_fullscreen.gif"/>
+
+## AD Animation
+
+<img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/3d_shape.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/loading-image.gif"/>
 
 
 ## 动图理解scrollTo &  translate 区别
 
 <img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/move.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/-move.gif"/>
+
+<details>
+<summary>更多动画，点击打开</summary>
+
 
 ## 仿QQ侧滑菜单效果
 
@@ -120,11 +158,14 @@ imitate 内的内容全部由 kotlin 语言实现，后续所有内容都会往�
 <img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/frame.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/rotate1.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/translate.gif"/>
 
 
+## 仿探探效果 & 约束布局（ConstraintLayout AnimationSet） 动画
 
+<img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/slide.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/constraint_set_anim.gif"/>
 
 ## 支付效果  & loading
 
 <img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/loading.gif"/><img width=300 src="https://raw.githubusercontent.com/REBOOTERS/Images/master/AndroidAnimationExercise/screen/alipay.gif"/>
+
 ## 属性动画实例 ##
 
 
@@ -136,3 +177,4 @@ imitate 内的内容全部由 kotlin 语言实现，后续所有内容都会往�
 
 
 
+</details>

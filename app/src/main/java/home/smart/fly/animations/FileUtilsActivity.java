@@ -7,22 +7,34 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.zhihu.android.sugaradapter.SugarAdapter;
 import com.zhihu.android.sugaradapter.SugarHolder;
 
+import home.smart.fly.animations.internal.annotations.Cat;
+import home.smart.fly.animations.internal.annotations.Tiger;
+import home.smart.fly.animations.utils.RxBus;
+import home.smart.fly.animations.utils.SimpleEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import home.smart.fly.animations.sugar.bean.Item;
 import home.smart.fly.animations.sugar.viewholder.LargeItemHolder;
@@ -30,7 +42,9 @@ import home.smart.fly.animations.sugar.viewholder.SmallItemHolder;
 import home.smart.fly.animations.utils.AppUtils;
 import home.smart.fly.animations.utils.StatusBarUtil;
 
+@Tiger
 public class FileUtilsActivity extends AppCompatActivity {
+
     private static final String TAG = "FileUtilsActivity";
 
     private List<Item> items;
@@ -38,6 +52,8 @@ public class FileUtilsActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private Context mContext;
     private FloatingActionButton mRetry;
+    private FloatingActionButton mRxBus;
+    private String mNull;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +62,7 @@ public class FileUtilsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_file_utils);
         mRecyclerView = findViewById(R.id.recyclerView);
         mRetry = findViewById(R.id.retry);
+        mRxBus = findViewById(R.id.rxbus);
 
         items = new ArrayList<>();
         mSugarAdapter = SugarAdapter.Builder.with(items)
@@ -69,9 +86,25 @@ public class FileUtilsActivity extends AppCompatActivity {
 
         refreshList();
 
-        mRetry.setOnClickListener(v -> {
-            recyclerview();
-        });
+        mRetry.setOnClickListener(v -> recyclerview());
+
+        mRxBus.setOnClickListener(v -> RxBus.getInstance().post(new SimpleEvent(FileUtilsActivity.class.getSimpleName())));
+
+
+        ArrayMap<String, String> arrayMap = new ArrayMap<>();
+        arrayMap.put("name", "mike");
+        arrayMap.put("address", "beijing");
+
+        for (String sets : arrayMap.keySet()) {
+            Log.e(TAG, "onCreate: sets=" + sets);
+        }
+
+        for (String values : arrayMap.values()) {
+            Log.e(TAG, "onCreate: values=" + values);
+        }
+        if (!TextUtils.isEmpty("3")) {
+
+        }
     }
 
     @Override
@@ -122,6 +155,11 @@ public class FileUtilsActivity extends AppCompatActivity {
         Log.e(TAG, "viewinfos: statusH=" + StatusBarUtil.getStatusBarHeight(this));
         Log.e(TAG, "viewinfos: screenW=" + displayMetrics.widthPixels);
         Log.e(TAG, "viewinfos: screenH=" + displayMetrics.heightPixels);
+        Log.e(TAG, "viewinfos: density=" + displayMetrics.density);
+        Log.e(TAG, "viewinfos: scaledDensity=" + displayMetrics.scaledDensity);
+        Log.e(TAG, "viewinfos: xdpi=" + displayMetrics.xdpi);
+        Log.e(TAG, "viewinfos: ydpi=" + displayMetrics.ydpi);
+        Log.e(TAG, "viewinfos: densityDpi=" + displayMetrics.densityDpi);
 
         Log.e(TAG, " \n\n");
 
@@ -200,6 +238,7 @@ public class FileUtilsActivity extends AppCompatActivity {
 
 
         mSugarAdapter.notifyDataSetChanged();
+
     }
     //</editor-fold>
 

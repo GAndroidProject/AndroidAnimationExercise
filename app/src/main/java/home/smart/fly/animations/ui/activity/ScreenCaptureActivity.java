@@ -7,21 +7,22 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.muddzdev.pixelshot.PixelShot;
@@ -36,9 +37,13 @@ import java.util.concurrent.TimeUnit;
 
 import home.smart.fly.animations.R;
 import home.smart.fly.animations.utils.FileUtil;
+import home.smart.fly.animations.utils.GenBitmapDelegate;
+import home.smart.fly.animations.utils.SysUtil;
+import home.smart.fly.animations.widget.DrawingThread;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import kotlin.Unit;
 
 public class ScreenCaptureActivity extends AppCompatActivity {
     private static final String TAG = "ScreenCaptureActivity";
@@ -50,31 +55,97 @@ public class ScreenCaptureActivity extends AppCompatActivity {
     private CheckBox mCheckBox;
     private Disposable timer;
 
+    private GenBitmapDelegate genBitmapDelegate;
+    private SurfaceView surfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        genBitmapDelegate = new GenBitmapDelegate(this);
         mContext = this;
         setContentView(R.layout.activity_screen_capture);
-        ivScreenshot = (ImageView) findViewById(R.id.ivScreenshot);
+        ivScreenshot = findViewById(R.id.ivScreenshot);
+        mCheckBox = findViewById(R.id.checkbox);
+        mCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                ivScreenshot.setVisibility(View.VISIBLE);
+            } else {
+                ivScreenshot.setVisibility(View.GONE);
+            }
+        });
+
+        setUpSurfaceView();
+
         findViewById(R.id.getScreen).setOnClickListener(v -> takeScreenshot());
 
         findViewById(R.id.getScreenPixel).setOnClickListener(v -> takeScreenShotWithPixel());
 
-        findViewById(R.id.getScreenShot).setOnClickListener(v -> takScreenShotForInvisibleView(R.layout.activity_screen_capture));
+        findViewById(R.id.getScreenShot).setOnClickListener(v ->
+                takScreenShotForInvisibleView(R.layout.activity_screen_capture));
 
-        mCheckBox = findViewById(R.id.checkbox);
-        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        findViewById(R.id.getSurfaceView).setOnClickListener(v -> taskSurfaceView());
+
+        findViewById(R.id.assemble).setOnClickListener(v -> assemble());
+    }
+
+    /**
+     * SurfaceView 的截图和普通 view 截图的合成
+     */
+    private void assemble() {
+        View viewRoot = getWindow().getDecorView().getRootView();
+        Bitmap background = genBitmapDelegate.getBitmapByDrawCache(viewRoot);
+
+
+        int[] position = new int[2];
+        surfaceView.getLocationInWindow(position);
+
+        if (SysUtil.Android8OrLater()) {
+            genBitmapDelegate.getBitmapFromSurfaceView(surfaceView, foreground -> {
+                Bitmap bitmap = genBitmapDelegate.composeBitmap(background, foreground, position[0], position[1]);
+                saveBitmap(bitmap);
+                return Unit.INSTANCE;
+            });
+        } else {
+            Toast.makeText(mContext, "不支持截图", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void taskSurfaceView() {
+        if (SysUtil.Android8OrLater()) {
+            genBitmapDelegate.getBitmapFromSurfaceView(surfaceView, bitmap -> {
+                saveBitmap(bitmap);
+                return Unit.INSTANCE;
+            });
+        } else {
+            Toast.makeText(mContext, "不支持截图", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private DrawingThread mDrawingThread;
+
+    // <editor-fold defaultstate="collapsed" desc="surface View">
+    private void setUpSurfaceView() {
+        surfaceView = findViewById(R.id.surface_view);
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    ivScreenshot.setVisibility(View.VISIBLE);
-                } else {
-                    ivScreenshot.setVisibility(View.GONE);
-                }
+            public void surfaceCreated(SurfaceHolder holder) {
+                mDrawingThread = new DrawingThread(mContext, surfaceHolder);
+                mDrawingThread.start();
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                mDrawingThread.quit();
             }
         });
     }
+    // </editor-fold>
 
     private void takScreenShotForInvisibleView(int layoutResId) {
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -108,29 +179,26 @@ public class ScreenCaptureActivity extends AppCompatActivity {
                         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_floating_window, null);
                         ImageView imageView = view.findViewById(R.id.target_view);
                         Glide.with(mContext).load(path).into(imageView);
-                        view.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                FloatWindow.get().hide();
-                                FloatWindow.destroy();
-                                if (timer != null && timer.isDisposed()) {
-                                    timer.dispose();
-                                }
-                                Intent mIntent = new Intent();
-                                mIntent.setAction(android.content.Intent.ACTION_VIEW);
-                                Uri contentUri;
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    // 将文件转换成content://Uri的形式
-                                    contentUri = FileProvider.getUriForFile(mContext, getPackageName() + ".fileprovider", new File(path));
-                                    // 申请临时访问权限
-                                    mIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                                } else {
-                                    contentUri = Uri.fromFile(new File(path));
-                                }
-
-                                mIntent.setDataAndType(contentUri, "image/*");
-                                startActivity(mIntent);
+                        view.setOnClickListener(v -> {
+                            FloatWindow.get().hide();
+                            FloatWindow.destroy();
+                            if (timer != null && timer.isDisposed()) {
+                                timer.dispose();
                             }
+                            Intent mIntent = new Intent();
+                            mIntent.setAction(Intent.ACTION_VIEW);
+                            Uri contentUri;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                // 将文件转换成content://Uri的形式
+                                contentUri = FileProvider.getUriForFile(mContext, getPackageName() + ".fileprovider", new File(path));
+                                // 申请临时访问权限
+                                mIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            } else {
+                                contentUri = Uri.fromFile(new File(path));
+                            }
+
+                            mIntent.setDataAndType(contentUri, "image/*");
+                            startActivity(mIntent);
                         });
 
 
@@ -185,26 +253,27 @@ public class ScreenCaptureActivity extends AppCompatActivity {
 
     public void takeScreenshot() {
         View viewRoot = getWindow().getDecorView().getRootView();
-        viewRoot.setDrawingCacheEnabled(true);
-        Bitmap temp = viewRoot.getDrawingCache();
-        ScreenParam screenInfo = getScreenInfo();
-        int statusBarHeight = getStatusBarHeight();
-        Bitmap bitmap = Bitmap.createBitmap(temp, 0, statusBarHeight, screenInfo.width, screenInfo.height - statusBarHeight);
-        viewRoot.setDrawingCacheEnabled(false);
+        Bitmap bitmap = genBitmapDelegate.getBitmapByDrawCache(viewRoot);
+        saveBitmap(bitmap);
 
+    }
+
+    private void saveBitmap(Bitmap bitmap) {
         RxPermissions rxPermissions = new RxPermissions(this);
         mDisposable = rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
-                        if (!TextUtils.isEmpty(FileUtil.savaBitmap2SDcard(ScreenCaptureActivity.this, bitmap, "myfile"))) {
-                            Toast.makeText(ScreenCaptureActivity.this, "success", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ScreenCaptureActivity.this, FullscreenActivity.class));
+                        String path = FileUtil.savaBitmap2SDcard(ScreenCaptureActivity.this, bitmap, "myfile");
+                        if (!TextUtils.isEmpty(path)) {
+                            Toast.makeText(ScreenCaptureActivity.this, "success path is " + path, Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(ScreenCaptureActivity.this, FullscreenActivity.class);
+                            intent.putExtra("path", path);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(ScreenCaptureActivity.this, "fail", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, Throwable::printStackTrace);
-
     }
 
     @Override
@@ -215,26 +284,5 @@ public class ScreenCaptureActivity extends AppCompatActivity {
         }
 
 //        FloatWindow.destroy();
-    }
-
-    private int getStatusBarHeight() {
-        Rect rect = new Rect();
-        getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-        return rect.top;
-    }
-
-    private ScreenParam getScreenInfo() {
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        return new ScreenParam(dm.widthPixels, dm.heightPixels);
-    }
-
-    private class ScreenParam {
-        int width, height;
-
-        ScreenParam(int width, int height) {
-            this.width = width;
-            this.height = height;
-        }
     }
 }

@@ -34,6 +34,41 @@ public class FileUtil {
      * @param name
      * @return
      */
+    public static String savaBitmap2SDcard(Context context, Bitmap bitmap, String name, String dir) {
+
+        String result = "";
+        File fileDir = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "DCIM" +
+                File.separator + "Camera" +
+                File.separator + dir +
+                File.separator);
+        if (!fileDir.exists()) {
+            fileDir.mkdir();
+        }
+        String filename = name + ".jpg";
+        File file = new File(fileDir, filename);
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.flush();
+            result = file.getAbsolutePath();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
     public static String savaBitmap2SDcard(Context context, Bitmap bitmap, String name) {
 
         String result = "";
@@ -112,10 +147,10 @@ public class FileUtil {
      * @param fileName
      * @return
      */
-    public static boolean saveStrToSDCard(String str, String fileName) {
+    public static boolean saveStrToBox(Context context, String str, String fileName) {
         boolean success = false;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            String path = Environment.getExternalStorageDirectory() + File.separator + fileName;
+            String path = context.getFilesDir().getAbsolutePath() + File.separator + fileName;
 
             File file = new File(path);
             try {

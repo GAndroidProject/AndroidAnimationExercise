@@ -1,15 +1,7 @@
 package home.smart.fly.animations;
 
-import android.app.Activity;
-
-import com.squareup.leakcanary.AndroidExcludedRefs;
-import com.squareup.leakcanary.ExcludedRefs;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-
-import java.util.concurrent.TimeUnit;
-
-import home.smart.fly.animations.interfaces.ActivityLifecycleSimpleCallbacks;
+import com.engineer.dateview.api.DataView;
+import com.engineer.dateview.interfaces.MyActivityLifecycleCallbacks;
 
 /**
  * @author: Rookie
@@ -17,36 +9,20 @@ import home.smart.fly.animations.interfaces.ActivityLifecycleSimpleCallbacks;
  * @desc
  */
 public class DebugMyApplication extends MyApplication {
+
+    String TAG = "ActLifecycleCallbacks";
+    private MyActivityLifecycleCallbacks mMyActivityLifecycleCallbacks;
+
+    /**
+     * 监听 Activity 的生命周期
+     */
     @Override
-    protected RefWatcher installLeakCanary() {
-        ExcludedRefs excludedRefs = AndroidExcludedRefs
-                .createAndroidDefaults()
-                .instanceField("home.smart.fly.animations.AppStartActivity", "mContext")
-                .build();
+    public void logLifeCycleCallBacks() {
 
+        DataView.init(this);
 
-        RefWatcher refWatcher = LeakCanary.refWatcher(this)
-                .watchDelay(10, TimeUnit.SECONDS)
-                .watchActivities(false)
-                .excludedRefs(excludedRefs)
-                .buildAndInstall();
-
-
-        // ignore specifice activity classes
-        registerActivityLifecycleCallbacks(new ActivityLifecycleSimpleCallbacks() {
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-                super.onActivityDestroyed(activity);
-                if (activity instanceof AppStartActivity) {
-                    return;
-                }
-
-                refWatcher.watch(activity);
-            }
-        });
-
-        return refWatcher;
+        mMyActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
+        unregisterActivityLifecycleCallbacks(mMyActivityLifecycleCallbacks);
+        registerActivityLifecycleCallbacks(mMyActivityLifecycleCallbacks);
     }
-
-
 }

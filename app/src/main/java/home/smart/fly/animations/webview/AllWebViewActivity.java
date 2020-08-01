@@ -22,7 +22,7 @@ import home.smart.fly.animations.ui.activity.WebViewMenuActivity;
 import home.smart.fly.animations.ui.activity.jianshu.helper.Constant;
 import home.smart.fly.animations.utils.FileUtil;
 import home.smart.fly.animations.utils.StatusBarUtil;
-import home.smart.fly.animations.utils.T;
+import home.smart.fly.animations.utils.TT;
 import home.smart.fly.animations.utils.Tools;
 import home.smart.fly.animations.utils.V;
 
@@ -36,6 +36,7 @@ public class AllWebViewActivity extends AppCompatActivity implements View.OnClic
     private static final String JIANSHU = "file:///android_asset/a.html";
     private static final String LOCAL_URL = "file:///android_asset/index.html";
     private static final String ALI_PAY_URL = "file:///android_asset/launch_alipay_app.html";
+    private static final String THREE_D_URL = "file:///android_asset/keyframe.html";
     private static final String WEIXIN_PAY_URL = "http://wechat.66card.com/vcweixin/common/toTestH5Weixin?company=c4p ";
 
     private Context mContext;
@@ -50,7 +51,7 @@ public class AllWebViewActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_all_web_view);
-        StatusBarUtil.setColor(this, getResources().getColor(R.color.cpb_green), 0);
+        StatusBarUtil.setColor(this, getResources().getColor(R.color.endColor), 0);
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         setTitle("WebView");
@@ -59,11 +60,13 @@ public class AllWebViewActivity extends AppCompatActivity implements View.OnClic
         mButton.setOnClickListener(this);
         findViewById(R.id.save).setOnClickListener(this);
 
+
         setUpWebView();
         loadData();
     }
 
-    private void setUpWebView() {
+    private void setUpWebView()
+    {
         tools = (LinearLayout) findViewById(R.id.tools);
         tools.setVisibility(View.VISIBLE);
 
@@ -78,6 +81,7 @@ public class AllWebViewActivity extends AppCompatActivity implements View.OnClic
         mWebView.setWebViewClient(new MyWebViewClient(mContext));
         mWebView.setWebChromeClient(new MyWebChromeClient());
         WebView.setWebContentsDebuggingEnabled(true);
+
     }
 
     private void loadData() {
@@ -159,6 +163,12 @@ public class AllWebViewActivity extends AppCompatActivity implements View.OnClic
             case R.id.menu:
                 startActivity(new Intent(mContext, WebViewMenuActivity.class));
                 break;
+            case R.id.galaxy:
+//                startActivity(new Intent(mContext, FullscreenPage.class));
+                mWebView.loadUrl(THREE_D_URL);
+                tools.setVisibility(View.GONE);
+                setTitle("galaxy");
+                break;
             default:
                 break;
         }
@@ -171,7 +181,7 @@ public class AllWebViewActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.button:
                 String time = Tools.getCurrentTime();
-                String version = Tools.getVersion(mContext);
+                String version = Tools.getAppVersion(mContext);
                 String name = Tools.getName(mContext);
                 String currentUrl = mWebView.getUrl();
                 String info = "Application Info: \n\n version: " + version
@@ -186,7 +196,7 @@ public class AllWebViewActivity extends AppCompatActivity implements View.OnClic
                 Canvas canvas = new Canvas(bmp);
                 snapShot.draw(canvas);
                 if (!TextUtils.isEmpty(FileUtil.savaBitmap2SDcard(mContext, bmp, "1111"))) {
-                    T.showSToast(mContext, "success");
+                    TT.showSToast(mContext, "success");
                 }
                 break;
             default:

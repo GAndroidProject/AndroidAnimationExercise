@@ -1,6 +1,9 @@
 package com.engineer.imitate.util
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
 import android.widget.Toast
 
 /**
@@ -24,3 +27,26 @@ fun Context.dp2px(dp: Float): Float {
     val scale = resources.displayMetrics.density
     return dp * scale
 }
+
+fun Context.px2dp(px: Float): Float {
+    val scale = resources.displayMetrics.density
+    return px / scale
+}
+
+fun Context.getActivity(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) {
+            return context
+        }
+        context = context.baseContext
+    }
+    return null
+}
+
+inline fun <reified T:Activity> Context.startActivity() {
+    val intent = Intent(this, T::class.java)
+    startActivity(intent)
+}
+
+

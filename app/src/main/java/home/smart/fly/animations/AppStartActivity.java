@@ -1,5 +1,6 @@
 package home.smart.fly.animations;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,76 +8,71 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources.Theme;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.view.*;
+import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.alibaba.android.arouter.facade.Postcard;
-import com.alibaba.android.arouter.facade.callback.NavCallback;
-import com.alibaba.android.arouter.launcher.ARouter;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.snackbar.Snackbar;
-import com.tencent.mmkv.MMKV;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.ThemedSpinnerAdapter;
 import androidx.appcompat.widget.Toolbar;
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
+import com.alibaba.android.arouter.facade.Postcard;
+import com.alibaba.android.arouter.facade.callback.NavCallback;
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.engineer.dateview.api.DataView;
+import com.google.android.material.snackbar.Snackbar;
+import com.skydoves.transformationlayout.TransitionExtensionKt;
+import com.tencent.mmkv.MMKV;
 import home.smart.fly.animations.fragments.base.BaseFragment;
 import home.smart.fly.animations.fragments.base.RoutePaths;
+import home.smart.fly.animations.internal.annotations.Cat;
+import home.smart.fly.animations.internal.NormalStatus;
+import home.smart.fly.animations.internal.Single;
 import home.smart.fly.animations.ui.SuperTools;
 import home.smart.fly.animations.ui.activity.AllActivity;
-import home.smart.fly.animations.utils.AppUtils;
-import home.smart.fly.animations.utils.PaletteUtils;
-import home.smart.fly.animations.utils.StatusBarUtil;
+import home.smart.fly.animations.utils.*;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 
 public class AppStartActivity extends AppCompatActivity {
     private static final String TAG = "AppStartActivity";
     private Snackbar snackbar = null;
-    private CoordinatorLayout main_contetn;
+    private CoordinatorLayout mainContent;
     private Context mContext;
     private AppCompatAutoCompleteTextView mAutoCompleteTextView;
-
-    private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
 
     private SharedPreferences mPreferences; // 简单粗暴保存一下位置，后期封装一下 TODO
 
-
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TransitionExtensionKt.onTransformationStartContainer(this);
         setContentView(R.layout.activity_app_start);
         mContext = this;
         mPreferences = getSharedPreferences("fragment_pos", MODE_PRIVATE);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-        mAppBarLayout = findViewById(R.id.appbar);
         mAutoCompleteTextView = findViewById(R.id.auto_complete_text);
         // Setup spinner
         Spinner spinner = findViewById(R.id.spinner);
-        spinner.setAdapter(new MyAdapter(
-                toolbar.getContext(),
-                getResources().getStringArray(R.array.fragments)));
+        spinner.setAdapter(new MyAdapter(mToolbar.getContext(), getResources().getStringArray(R.array.fragments)));
 
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -90,7 +86,7 @@ public class AppStartActivity extends AppCompatActivity {
 
                 int resId = fragment.getBackgroundResId();
                 int color = PaletteUtils.getMagicColor(getResources(), resId);
-                toolbar.setBackgroundColor(color);
+                mToolbar.setBackgroundColor(color);
                 StatusBarUtil.setColor(AppStartActivity.this, color, 0);
                 mAutoCompleteTextView.setBackgroundColor(color);
             }
@@ -101,7 +97,7 @@ public class AppStartActivity extends AppCompatActivity {
         });
 
         spinner.setSelection(getLastPosition());
-        main_contetn = findViewById(R.id.main_content);
+        mainContent = findViewById(R.id.main_content);
         findViewById(R.id.fab).setOnClickListener(v -> ARouter.getInstance()
                 .build("/index/kotlin").navigation(mContext, new NavCallback() {
                     @Override
@@ -111,16 +107,62 @@ public class AppStartActivity extends AppCompatActivity {
                     @Override
                     public void onLost(Postcard postcard) {
                         super.onLost(postcard);
-                        snackbar = Snackbar.make(main_contetn, R.string.module_info, Snackbar.LENGTH_LONG)
+                        snackbar = Snackbar.make(mainContent, R.string.module_info, Snackbar.LENGTH_LONG)
                                 .setAction("知道了", v1 -> snackbar.dismiss());
-                        snackbar.getView().setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                        snackbar.setActionTextColor(getResources().getColor(R.color.white));
+                        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(),
+                                R.color.colorAccent));
+                        snackbar.setActionTextColor(Color.WHITE);
                         snackbar.show();
                     }
                 }));
-        print();
 
         setupAutoCompleteTextView();
+
+        reportFullyDrawn();
+
+
+        testCode();
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="some test code">
+
+    private void testCode() {
+        RxBus.getInstance().toObservable(SimpleEvent.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(simpleEvent -> Toast.makeText(mContext, simpleEvent.getMsg(), Toast.LENGTH_SHORT).show());
+
+        Looper.myQueue().addIdleHandler(() -> {
+            Log.e(TAG, "queueIdle: just idle");
+            Log.e(TAG, "onCreate: " + Thread.currentThread().getName());
+            AsyncLayoutInflater asyncLayoutInflater = new AsyncLayoutInflater(mContext);
+            asyncLayoutInflater.inflate(R.layout.activity_file_utils, null, (view, resid, parent) -> {
+                Log.e(TAG, "inflate: " + view);
+                Log.e(TAG, "inflate: " + resid);
+                Log.e(TAG, "inflate: " + parent);
+            });
+            return false;
+        });
+
+        howEnumWork();
+        print();
+    }
+
+    /**
+     * 枚举是如何工作的
+     */
+    private void howEnumWork() {
+        System.out.println("enum " + NormalStatus.SUCCESS.name());
+        System.out.println("enum " + Arrays.toString(NormalStatus.values()));
+        System.out.println("enum " + NormalStatus.getStats(1));
+        System.out.println("enum " + NormalStatus.getStats(0));
+        System.out.println("enum " + NormalStatus.getStats(-1));
+
+        System.out.println("enum " + NormalStatus.getValue(NormalStatus.SUCCESS));
+        System.out.println("enum " + NormalStatus.getValue(NormalStatus.LOADING));
+        System.out.println("enum " + NormalStatus.getValue(NormalStatus.FAIL));
+
+        System.out.println("enum " + Single.INSTANCE.getValue());
+        System.out.println("enum " + Single.INSTANCE.hashCode());
     }
 
     // <editor-fold defaultstate="collapsed" desc="一些屏幕信息">
@@ -142,7 +184,7 @@ public class AppStartActivity extends AppCompatActivity {
     private void print(String msg) {
         Log.e("Nj", msg);
     }
-
+    // </editor-fold>
 
     @Override
     protected void onResume() {
@@ -160,6 +202,13 @@ public class AppStartActivity extends AppCompatActivity {
         MMKV.defaultMMKV().putBoolean("running", true);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.e(TAG, "onWindowFocusChanged: " + mAutoCompleteTextView.getMeasuredHeight());
+        Log.e(TAG, "onWindowFocusChanged: " + mAutoCompleteTextView.getMeasuredWidth());
+    }
+
     private void saveLastSelect(int lastPosition) {
         mPreferences.edit().putInt("pos", lastPosition).apply();
     }
@@ -173,6 +222,7 @@ public class AppStartActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_app_start, menu);
+        mToolbar.hideOverflowMenu();
         return true;
     }
 
@@ -215,11 +265,13 @@ public class AppStartActivity extends AppCompatActivity {
         } else if (id == R.id.action_all) {
             startActivity(new Intent(mContext, AllActivity.class));
             return true;
+        } else if (id == R.id.data_view_chart) {
+            DataView.show(this);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
     // </editor-fold>
-
 
     // <editor-fold defaultstate="collapsed" desc="SpinnerAdapter">
     private static class MyAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
@@ -269,9 +321,7 @@ public class AppStartActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    // TODO https://blog.csdn.net/HarryWeasley/article/details/82591320
-
-
+    // <editor-fold defaultstate="collapsed" desc="setupAutoCompleteTextView">
     private void setupAutoCompleteTextView() {
         List<String> activites = new ArrayList<>();
         List<String> activitesAll = new ArrayList<>();
@@ -284,8 +334,8 @@ public class AppStartActivity extends AppCompatActivity {
                 String activity = activityInfo.name;
                 int dotIndex = activity.lastIndexOf(".");
                 String act = activity.substring(dotIndex + 1);
-                Log.e(TAG, "setupAutoCompleteTextView: " + act);
-                Log.e(TAG, "setupAutoCompleteTextView: " + activity);
+//                Log.e(TAG, "setupAutoCompleteTextView: " + act);
+//                Log.e(TAG, "setupAutoCompleteTextView: " + activity);
                 if (act.equals("AppStartActivity")) {
                     continue;
                 }
@@ -319,4 +369,5 @@ public class AppStartActivity extends AppCompatActivity {
                 }
         );
     }
+    // </editor-fold>
 }
