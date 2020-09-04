@@ -8,7 +8,8 @@
     android:orientation="vertical"
     tools:context=".ui.activity.MailActivity">
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/sendMailNative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +18,8 @@
         android:text="send_mail_native"
         android:textColor="@color/cpb_white"/>
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/sendMailApp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +27,8 @@
         android:background="@color/cpb_blue"
         android:text="send_mail_with_App"
         android:textColor="@color/cpb_white"/>
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

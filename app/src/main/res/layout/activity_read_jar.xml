@@ -7,7 +7,8 @@
         android:layout_height="match_parent"
         tools:context=".ui.activity.ReadJarActivity">
 
-    <Button android:layout_width="match_parent"
+     <Button
+            android:textAllCaps="false" android:layout_width="match_parent"
             android:id="@+id/read_file"
             android:layout_margin="20dp"
             android:text="read file"

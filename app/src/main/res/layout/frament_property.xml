@@ -12,7 +12,8 @@
         android:orientation="vertical">
 
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/property"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +22,8 @@
             android:text="PropertyAnimation"
             android:textColor="@color/cpb_white" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +32,8 @@
             android:text="PropertyValueAnimation"
             android:textColor="@color/cpb_white" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/animate_drawable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +42,8 @@
             android:text="Animation Drawable"
             android:textColor="@color/cpb_white" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/demo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +52,8 @@
             android:text="Pay_Anim"
             android:textColor="@color/cpb_white" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/shopcar_add_anim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,7 +62,8 @@
             android:text="shopcar_add_anim"
             android:textColor="@color/cpb_white" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/LayoutAnimations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +72,8 @@
             android:text="LayoutAnimations"
             android:textColor="@color/cpb_white" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/RevealAnimator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,7 +82,8 @@
             android:text="RevealAnimator"
             android:textColor="@color/cpb_white" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/DecorView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +92,8 @@
             android:text="DecorView"
             android:textColor="@color/cpb_white" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/PhysicsAnim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -17,31 +17,36 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
             android:id="@+id/start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="start" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
             android:id="@+id/stop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="stop" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
             android:id="@+id/revert"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="true" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
             android:id="@+id/headsup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="headsup" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
             android:id="@+id/headsup_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

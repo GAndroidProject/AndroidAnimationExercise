@@ -15,14 +15,16 @@
         android:layout_marginTop="25dp"
         android:timePickerMode="spinner" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/go"
         android:text="register_by_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/go1"
         android:text="send receiver by hand"
         android:layout_width="match_parent"
@@ -38,7 +40,8 @@
         android:calendarViewShown="false"
         android:datePickerMode="spinner" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

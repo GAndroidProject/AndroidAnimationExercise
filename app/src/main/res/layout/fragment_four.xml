@@ -13,7 +13,8 @@
         android:layout_width="300dp"
         android:layout_height="300dp"/>
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:layout_below="@id/image"
         android:id="@+id/reload"
         android:text="reload"

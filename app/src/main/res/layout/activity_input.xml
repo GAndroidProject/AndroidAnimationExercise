@@ -45,35 +45,40 @@
             android:layout_margin="10dp" />
 
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/get"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="获取输入" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/set_badge_num"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="set_badge_num" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/format"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="去除换行" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/getMac1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="获取Mac地址方式1" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/getMac2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

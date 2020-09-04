@@ -12,7 +12,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main">
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/sl"
         android:text="ScrollView"
         android:background="#ff2020"
@@ -22,7 +23,8 @@
 
 
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/rv"
         android:text="RecycerView"
         android:layout_below="@+id/sl"
@@ -32,7 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/bs_dialog"
         android:text="bottom_sheet_dialog"
         android:layout_below="@+id/rv"
@@ -42,7 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/beautiful"
         android:text="一个漂亮的demo"
         android:layout_below="@+id/bs_dialog"

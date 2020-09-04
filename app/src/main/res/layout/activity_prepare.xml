@@ -59,13 +59,15 @@
                 android:text="六个字\n六个字" />
         </RelativeLayout>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/scroll_to"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="scroll_to" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/scroll_by"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

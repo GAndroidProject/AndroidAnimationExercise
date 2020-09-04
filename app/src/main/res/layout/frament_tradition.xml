@@ -14,7 +14,8 @@
         android:orientation="vertical"
         android:showDividers="middle">
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,7 +24,8 @@
             android:text="FrameAnimation"
             android:textColor="@color/white"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/tween"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +34,8 @@
             android:text="TweenedAnimation"
             android:textColor="@color/white"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/blur"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +44,8 @@
             android:text="Blur"
             android:textColor="@color/white"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/activitySwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +54,8 @@
             android:text="activitySwitch"
             android:textColor="@color/white"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/vpAnim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +64,8 @@
             android:text="ViewPagerAnim"
             android:textColor="@color/white"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/swipeAnim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,7 +75,8 @@
             android:textColor="@color/white"
             android:visibility="visible"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/share_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

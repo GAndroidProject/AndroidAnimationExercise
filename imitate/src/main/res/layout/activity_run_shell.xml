@@ -43,7 +43,8 @@
             android:checked="true"
             android:text="@string/run_as_root" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/runButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

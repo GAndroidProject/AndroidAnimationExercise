@@ -18,7 +18,8 @@
         android:textColor="@color/cpb_green_dark"
         android:text="Activity" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/exlpode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +27,8 @@
         android:background="@color/cpb_red"
         android:text="exlpode"
         android:textColor="@color/cpb_white" />
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/slide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

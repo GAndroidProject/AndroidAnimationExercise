@@ -16,32 +16,37 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/getScreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="drawCache 截图" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/getScreenPixel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PixelShot 截图" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/getSurfaceView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PixelCopy 截取 SurfaceView" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/assemble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="合成截图" />
 
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/getScreenShot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

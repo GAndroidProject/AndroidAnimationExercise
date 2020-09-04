@@ -8,14 +8,16 @@
     android:orientation="vertical"
     tools:context=".ui.activity.PdfActivity">
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/printHelper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="PrintHelper"/>
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/genPdf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

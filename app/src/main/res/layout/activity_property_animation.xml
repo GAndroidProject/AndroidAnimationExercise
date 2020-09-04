@@ -6,7 +6,8 @@
     android:padding="20dp">
 
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/alpha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,14 +15,16 @@
         android:textColor="@color/colorAccent" />
 
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/translate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="translate"
         android:textColor="@color/colorAccent" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/scale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,14 +32,16 @@
         android:textColor="@color/colorAccent" />
 
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/rotate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="rotate"
         android:textColor="@color/colorAccent" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/set"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

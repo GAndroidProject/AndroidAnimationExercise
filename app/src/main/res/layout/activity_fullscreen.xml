@@ -42,7 +42,8 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
-            <Button
+             <Button
+            android:textAllCaps="false"
                 android:id="@+id/dummy_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"

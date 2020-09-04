@@ -28,7 +28,8 @@
         app:layout_constraintRight_toRightOf="@+id/copyEdit"
         app:layout_constraintTop_toBottomOf="@+id/copyEdit" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/copy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,7 +38,8 @@
         app:layout_constraintLeft_toLeftOf="@+id/pasteEdit"
         app:layout_constraintTop_toBottomOf="@+id/pasteEdit" />
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/paste"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

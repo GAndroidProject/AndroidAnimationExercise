@@ -52,7 +52,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+             <Button
+            android:textAllCaps="false"
                 android:id="@+id/alpha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +62,8 @@
                 android:textColor="@color/colorAccent" />
 
 
-            <Button
+             <Button
+            android:textAllCaps="false"
                 android:id="@+id/translate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,7 +112,8 @@
 
             </RadioGroup>
 
-            <Button
+             <Button
+            android:textAllCaps="false"
                 android:id="@+id/scale"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,7 +127,8 @@
             android:layout_height="0.1dp"
             android:background="#000" />
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/rotate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -268,7 +272,8 @@
 
         </FrameLayout>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/stopAnim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

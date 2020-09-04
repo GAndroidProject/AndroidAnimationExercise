@@ -39,7 +39,8 @@ class Choco @JvmOverloads constructor(
     var enableInfiniteDuration = false
     private var enableProgress = false
     private var enabledVibration = false
-    private var buttons = ArrayList<Button>()
+    private var buttons = ArrayList <Button
+            android:textAllCaps="false">()
 
     private var onShow: (() -> Unit)? = null
     private var onDismiss: (() -> Unit)? = null

@@ -24,7 +24,8 @@
             android:layout_weight="9"
             android:layout_height="wrap_content"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/set"
             android:text="init"
             android:layout_marginEnd="16dp"
@@ -49,21 +50,24 @@
         android:padding="16dp"
         android:layout_height="wrap_content">
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:text="start"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:id="@+id/start"
             android:layout_height="wrap_content"/>
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:text="pause"
             android:layout_width="0dp"
             android:id="@+id/pause"
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:layout_height="wrap_content"/>
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:text="stop"
             android:layout_width="0dp"
             android:id="@+id/stop"

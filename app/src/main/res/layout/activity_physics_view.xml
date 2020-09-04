@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.PhysicsViewActivity">
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,7 +40,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/android_robot"/>
 
-    <Button
+     <Button
+            android:textAllCaps="false"
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

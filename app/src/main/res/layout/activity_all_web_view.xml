@@ -38,14 +38,16 @@
         android:layout_height="match_parent"
         android:layout_weight="5">
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="Java2JavaScript"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

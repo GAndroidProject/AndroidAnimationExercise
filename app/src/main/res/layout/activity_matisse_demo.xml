@@ -14,7 +14,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <Button
+         <Button
+            android:textAllCaps="false"
                 android:id="@+id/zhihu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -27,7 +28,8 @@
                 android:textColor="@android:color/white"
                 android:theme="@style/ZhihuOverlay"/>
 
-        <Button
+         <Button
+            android:textAllCaps="false"
                 android:id="@+id/dracula"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
