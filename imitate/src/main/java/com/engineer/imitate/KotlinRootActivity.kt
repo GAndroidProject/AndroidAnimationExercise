@@ -37,6 +37,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
+
+// 这个子模块并没有被用于  主 module
 @Route(path = Routes.INDEX)
 class KotlinRootActivity : AppCompatActivity() {
     private val TAG = KotlinRootActivity::class.java.simpleName
