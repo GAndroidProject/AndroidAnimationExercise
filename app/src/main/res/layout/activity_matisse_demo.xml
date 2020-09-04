@@ -15,7 +15,6 @@
             android:orientation="vertical">
 
          <Button
-            android:textAllCaps="false"
                 android:id="@+id/zhihu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,7 +28,6 @@
                 android:theme="@style/ZhihuOverlay"/>
 
          <Button
-            android:textAllCaps="false"
                 android:id="@+id/dracula"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
