@@ -103,6 +103,8 @@ class ReverseGifActivity : AppCompatActivity() {
         timer.base = SystemClock.elapsedRealtime()
         timer.start()
 
+
+//      通过这个工具实现了倒序
         GifFactory.getReverseRes(mContext, source)
             .subscribe({
                 loading.visibility = View.GONE
