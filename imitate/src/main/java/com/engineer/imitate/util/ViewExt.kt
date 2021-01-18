@@ -27,11 +27,36 @@ fun View.setBorderlessBackground() {
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View =
     LayoutInflater.from(context).inflate(layoutRes, this, false)
 
-fun View.clicks(skipDuration:Long = 500, block: (View)-> Unit) {
+fun View.clicks(skipDuration: Long = 500, block: (View) -> Unit) {
     val throttle = Throttle(skipDuration, TimeUnit.MILLISECONDS)
     setOnClickListener {
         if (throttle.needSkip()) return@setOnClickListener
         block(it)
+    }
+}
+
+fun View?.hide() {
+    if (this == null) {
+        return
+    } else {
+        this.visibility = View.GONE
+    }
+}
+
+fun View?.show() {
+    if (this == null) {
+        return
+    } else {
+        this.visibility = View.VISIBLE
+    }
+}
+
+
+fun View?.invisible() {
+    if (this == null) {
+        return
+    } else {
+        this.visibility = View.INVISIBLE
     }
 }
 

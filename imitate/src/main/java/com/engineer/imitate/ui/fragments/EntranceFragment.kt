@@ -24,10 +24,13 @@ import com.engineer.android.game.ui.GameRootActivity
 import com.engineer.imitate.R
 import com.engineer.imitate.ui.activity.*
 import com.engineer.imitate.ui.activity.fragmentmanager.ContentActivity
+import com.engineer.imitate.ui.activity.ninepoint.NinePointActivity
+import com.engineer.imitate.ui.activity.surface.SurfaceViewActivity
 import com.engineer.imitate.util.Glide4Engine
 import com.engineer.imitate.util.startActivity
 import com.engineer.imitate.util.toastShort
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.permissionx.guolindev.PermissionX
+import com.wanglu.photoviewerlibrary.PhotoViewer
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.internal.entity.CaptureStrategy
@@ -59,46 +62,56 @@ class EntranceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         button.setOnClickListener {
-            val permissions = RxPermissions(this)
-            permissions.request(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
-            )
-                .subscribe {
-                    Matisse.from(this)
-                        .choose(MimeType.ofAll(), false)
-                        .countable(true)
-                        .capture(true)
-                        .captureStrategy(
-                            CaptureStrategy(true, context!!.packageName + ".fileprovider")
-                        )
-                        .maxSelectable(9)
-                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                        .thumbnailScale(0.85f)
-                        .imageEngine(Glide4Engine())
-                        .forResult(100)
+            PermissionX.init(this)
+                .permissions(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA
+                )
+                .request { it, _, _ ->
+                    if (it) {
+                        Matisse.from(this)
+                            .choose(MimeType.ofAll(), false)
+                            .countable(true)
+                            .capture(true)
+                            .captureStrategy(
+                                CaptureStrategy(
+                                    true,
+                                    requireContext().packageName + ".fileprovider"
+                                )
+                            )
+                            .maxSelectable(9)
+                            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                            .thumbnailScale(0.85f)
+                            .imageEngine(Glide4Engine())
+                            .forResult(100)
+                    }
                 }
         }
 
         set_bg.setOnClickListener {
-            val permissions = RxPermissions(this)
-            permissions.request(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
-            )
-                .subscribe {
-                    Matisse.from(this)
-                        .choose(MimeType.ofAll(), false)
-                        .countable(true)
-                        .capture(true)
-                        .captureStrategy(
-                            CaptureStrategy(true, context!!.packageName + ".fileprovider")
-                        )
-                        .maxSelectable(9)
-                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                        .thumbnailScale(0.85f)
-                        .imageEngine(Glide4Engine())
-                        .forResult(101)
+            PermissionX.init(this)
+                .permissions(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA
+                )
+                .request { it, _, _ ->
+                    if (it) {
+                        Matisse.from(this)
+                            .choose(MimeType.ofAll(), false)
+                            .countable(true)
+                            .capture(true)
+                            .captureStrategy(
+                                CaptureStrategy(
+                                    true,
+                                    requireContext().packageName + ".fileprovider"
+                                )
+                            )
+                            .maxSelectable(9)
+                            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                            .thumbnailScale(0.85f)
+                            .imageEngine(Glide4Engine())
+                            .forResult(101)
+                    }
                 }
         }
 
@@ -115,7 +128,9 @@ class EntranceFragment : Fragment() {
             sheet.show(childFragmentManager, EntranceFragment::class.toString())
         }
 
-
+        inflate_real.setOnClickListener {
+            startActivity(Intent(context, InflateRealActivity::class.java))
+        }
 
         final_one.setOnClickListener {
             context?.startActivity<FinalActivity>()
@@ -174,6 +189,14 @@ class EntranceFragment : Fragment() {
                 )
             )
         }
+        constraintLayout_ll2.setOnClickListener {
+            startActivity(
+                Intent(
+                    context,
+                    CLActivity::class.java
+                )
+            )
+        }
         fragment_manager.setOnClickListener {
             startActivity(
                 Intent(
@@ -182,11 +205,23 @@ class EntranceFragment : Fragment() {
                 )
             )
         }
+        surface.setOnClickListener {
+            startActivity(
+                Intent(
+                    context,
+                    SurfaceViewActivity::class.java
+                )
+            )
+        }
+        nine_point.setOnClickListener {
+            startActivity(Intent(context, NinePointActivity::class.java))
+        }
 
         adapter = MyListAdapter()
         recyclerView.layoutManager = GridLayoutManager(context, 2)
         recyclerView.adapter = adapter
     }
+
 
     class MyBottomSheetFragment : SuperBottomSheetFragment() {
         override fun onCreateView(
@@ -255,9 +290,22 @@ class EntranceFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
             context = parent.context
-            var view =
-                LayoutInflater.from(parent.context).inflate(R.layout.image_item, parent, false)
-            return Holder(view)
+//            var view =
+//                LayoutInflater.from(parent.context).inflate(R.layout.image_item, parent, false)
+            val imageView = ImageView(context)
+            imageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            val holder = Holder(imageView)
+            imageView.setOnClickListener {
+                val pos = holder.adapterPosition
+                val url = datas[pos]
+                PhotoViewer.setClickSingleImg(url, it)
+                    .setShowImageViewInterface(object : PhotoViewer.ShowImageViewInterface {
+                        override fun show(iv: ImageView, url: String) {
+                            Glide.with(this@EntranceFragment).load(url).into(iv)
+                        }
+                    }).start(this@EntranceFragment)
+            }
+            return holder
         }
 
         override fun getItemCount(): Int {
@@ -271,7 +319,7 @@ class EntranceFragment : Fragment() {
         private lateinit var context: Context
 
         private inner class Holder(view: View) : RecyclerView.ViewHolder(view) {
-            var image: ImageView = view.findViewById(R.id.image);
+            var image: ImageView = view as ImageView
         }
     }
 

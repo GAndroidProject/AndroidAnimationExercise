@@ -4,15 +4,18 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
@@ -23,11 +26,17 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.engineer.imitate.model.FragmentItem
 import com.engineer.imitate.ui.activity.ReverseGifActivity
+import com.engineer.imitate.ui.widget.opensource.text.ActionMenu
 import com.engineer.imitate.util.AnimDelegate
+import com.engineer.imitate.util.SpUtil
+import com.engineer.imitate.util.dp
+import com.engineer.imitate.util.toastShort
+import com.gyf.immersionbar.ImmersionBar
 import com.list.rados.fast_list.FastListAdapter
 import com.list.rados.fast_list.bind
 import com.skydoves.transformationlayout.onTransformationStartContainer
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_kotlin_root.*
 import kotlinx.android.synthetic.main.content_kotlin_root.*
@@ -36,16 +45,18 @@ import org.apache.commons.io.FileUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 
 // 这个子模块并没有被用于  主 module
 @Route(path = Routes.INDEX)
+@SuppressLint("LogNotTimber")
 class KotlinRootActivity : AppCompatActivity() {
     private val TAG = KotlinRootActivity::class.java.simpleName
     private val ORIGINAL_URL = "file:///android_asset/index.html"
     private lateinit var hybridHelper: HybridHelper
 
-    private lateinit var currentFragment: Fragment
+    private var currentFragment: Fragment? = null
     private lateinit var mLinearManager: LinearLayoutManager
     private lateinit var mGridLayoutManager: GridLayoutManager
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
@@ -55,8 +66,10 @@ class KotlinRootActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         onTransformationStartContainer()
         super.onCreate(savedInstanceState)
+        ImmersionBar.with(this)
+            .fitsSystemWindows(true)
+            .statusBarColor(R.color.colorPrimary).init()
         setContentView(R.layout.activity_kotlin_root)
-
         setSupportActionBar(toolbar)
         loadView()
         jsonTest()
@@ -115,6 +128,7 @@ class KotlinRootActivity : AppCompatActivity() {
     private fun initList(): MutableList<FragmentItem> {
         return mutableListOf(
             FragmentItem("/anim/entrance", "entrance"),
+            FragmentItem("/anim/rx_play", "rx_play"),
             FragmentItem("/anim/motion_layout", "motion_layout"),
             FragmentItem("/anim/github", "github features"),
             FragmentItem("/anim/pure_3d_share", "3D shape"),
@@ -150,6 +164,9 @@ class KotlinRootActivity : AppCompatActivity() {
             path.setOnClickListener {
                 AnimDelegate.apply(context, path, gif, shell_root)
             }
+            more_menu.setOnClickListener {
+                showMenu(more_menu)
+            }
 
             shell.setOnClickListener {
                 gif.hide()
@@ -161,8 +178,7 @@ class KotlinRootActivity : AppCompatActivity() {
                 index.visibility = View.GONE
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.content, fragment).commit()
-
-                Log.e(TAG, "transaction===" + transaction.isEmpty)
+                updateState()
             }
         }.layoutManager(mLayoutManager)
 
@@ -176,6 +192,12 @@ class KotlinRootActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun showMenu(view: View) {
+        val popupMenu = PopupMenu(this, view, Gravity.END)
+        popupMenu.menuInflater.inflate(R.menu.index_setting_menu, popupMenu.menu)
+        popupMenu.show()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -227,12 +249,20 @@ class KotlinRootActivity : AppCompatActivity() {
         return true
     }
 
+
+    private fun isNightMode(): Boolean {
+        val flag = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return flag == Configuration.UI_MODE_NIGHT_YES
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val item = menu?.findItem(R.id.theme_switch)
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            item?.setIcon(R.drawable.ic_brightness_high_white_24dp)
-        } else {
+        if (isNightMode()) {
             item?.setIcon(R.drawable.ic_brightness_low_white_24dp)
+            item?.setTitle("日间模式")
+        } else {
+            item?.setIcon(R.drawable.ic_brightness_high_white_24dp)
+            item?.title = "夜间模式"
         }
         val change = menu?.findItem(R.id.action_change)
         change?.isVisible = (recyclerView.visibility == View.VISIBLE)
@@ -264,12 +294,14 @@ class KotlinRootActivity : AppCompatActivity() {
                 return true
             }
         } else if (item.itemId == R.id.theme_switch) {
-            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
+            if (isNightMode()) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                SpUtil(this).saveBool(SpUtil.KEY_THEME_NIGHT_ON, false)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                SpUtil(this).saveBool(SpUtil.KEY_THEME_NIGHT_ON, true)
             }
-            recreate()
+//            recreate()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -286,18 +318,38 @@ class KotlinRootActivity : AppCompatActivity() {
         content.visibility = View.GONE
         index.visibility = View.VISIBLE
         gif.show()
-        val transaction = supportFragmentManager.beginTransaction()
-        if (!transaction.isEmpty) {
-            transaction.remove(currentFragment)
+        Log.e(TAG, "fragments size = " + supportFragmentManager.fragments.size)
+        currentFragment?.let {
+            if (supportFragmentManager.fragments.size > 0) {
+                supportFragmentManager.beginTransaction()
+                    .remove(it)
+                    .commitAllowingStateLoss()
+                currentFragment = null
+                updateState()
+            }
         }
-        Log.e(TAG, "transaction===" + transaction.isEmpty)
-        Log.e(TAG, "transaction===" + supportFragmentManager.fragments.size)
-
 
     }
 
-    private fun jsonTest() {
+    private fun updateState() {
+        Observable.just(1)
+            .delay(1, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                Log.e(TAG, "updateState: ======================================================\n")
+                Log.e(TAG, "fragments size = " + supportFragmentManager.fragments.size)
+                supportFragmentManager.fragments.forEach {
+                    Log.e(
+                        TAG,
+                        "fragment [ ${it.javaClass.name} ] in activity [ ${it.activity?.javaClass?.simpleName} ]"
+                    )
+                }
+                Log.e(TAG, "updateState: ======================================================\n")
+            }
+            .subscribe()
+    }
 
+    private fun jsonTest() {
         val uri = "https://www.zhihu.com/search?q=%E5%88%A9%E7%89%A9%E6%B5%A6&type=content"
         val parseUri = Uri.parse(uri)
 

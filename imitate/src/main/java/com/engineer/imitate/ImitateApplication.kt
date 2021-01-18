@@ -7,8 +7,15 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.alibaba.android.arouter.launcher.ARouter
+import com.didichuxing.doraemonkit.*
 import com.engineer.imitate.interfaces.SimpleActivityCallback
+import com.engineer.imitate.util.SpUtil
 import com.engineer.imitate.util.TextUtil
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.stetho.Stetho
@@ -24,7 +31,7 @@ class ImitateApplication : Application() {
 
     companion object {
         lateinit var application: Context
-        val TAG = "activity-life"
+        val TAG = "activity_life"
     }
 
     override fun attachBaseContext(base: Context?) {
@@ -43,6 +50,11 @@ class ImitateApplication : Application() {
         }
         Stetho.initializeWithDefaults(this)
         WebView.setWebContentsDebuggingEnabled(true)
+        if (SpUtil(this).getBool(SpUtil.KEY_THEME_NIGHT_ON)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+        DoraemonKit.disableUpload()
+        DoraemonKit.install(this)
 
         if (BuildConfig.DEBUG) {
             ARouter.openLog()
@@ -59,6 +71,30 @@ class ImitateApplication : Application() {
         application = this
 
         registerActivityLifecycleCallbacks(object : SimpleActivityCallback() {})
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(object : LifecycleObserver {
+            val TAG = "ProcessLifecycleOwner"
+
+            @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+            fun onCreate() {
+                Log.d(TAG, "onCreate() called")
+            }
+
+            @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+            fun onResume() {
+                Log.d(TAG, "onResume() called")
+            }
+
+            @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+            fun onPause() {
+                Log.d(TAG, "onPause() called")
+            }
+
+            @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+            fun onStop() {
+                Log.d(TAG, "onStop() called")
+            }
+        })
     }
 
 
@@ -80,7 +116,7 @@ class ImitateApplication : Application() {
         testHighFun()
 
         val json = TextUtil.getJson()
-        Log.e("json", "json form json-dsl is : $json")
+//        Log.e("json", "json form json-dsl is : $json")
     }
 
 

@@ -1,7 +1,7 @@
 apply plugin: 'com.didi.dokit'
 dokitExt {
     //dokit 插件开关
-    dokitPluginSwitch true
+//    dokitPluginSwitch true
     //通用设置
     comm {
         //地图经纬度开关
@@ -24,7 +24,7 @@ dokitExt {
             //默认值为 5ms 小于该值的函数在调用栈中不显示
             thresholdTime 10
             //调用栈函数入口
-            enterMethods = ["com.didichuxing.doraemondemo.MainDebugActivity.test1"]
+            enterMethods = ["home.smart.fly.animations.AppStartActivity.onCreate"]
         }
         //普通模式配置
         normalMethod {
